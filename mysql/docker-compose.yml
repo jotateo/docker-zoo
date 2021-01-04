@@ -3,6 +3,7 @@ version: '3'
 services:
     rundeck:
         image: rundeck/rundeck:SNAPSHOT
+        hostname: rundeck-web
         links:
           - mysql
         environment:
@@ -11,6 +12,8 @@ services:
             RUNDECK_DATABASE_PASSWORD: rundeck
             RUNDECK_DATABASE_URL: jdbc:mysql://mysql/rundeck?autoReconnect=true&useSSL=false
         volumes:
+          - ./rundeck-files/etc/framework.properties:/home/rundeck/etc/framework.properties:rw
+          - ./rundeck-files/server/config/rundeck-config.properties:/home/rundeck/server/config/rundeck-config.properties:rw
           - ${RUNDECK_LICENSE_FILE:-/dev/null}:/home/rundeck/etc/rundeckpro-license.key
         ports:
           - 4440:4440
@@ -28,3 +31,6 @@ services:
 
 volumes:
     dbdata:
+      driver: local
+    rundeckdata:
+      driver: local
